@@ -152,10 +152,16 @@ export async function registerStaff(req: Request, res: Response): Promise<void> 
         email,
         password,
         email_confirm: true,
+        // app_metadata is admin-only — users cannot modify it via the client SDK
+        // This is what the Next.js middleware reads for role-based route protection
+        app_metadata: {
+            role: staffRole,
+        },
+        // user_metadata is readable by the user but we keep it for convenience
         user_metadata: {
             full_name: fullName,
-            role: staffRole,
-            nu_id: nuId,
+            role:      staffRole,
+            nu_id:     nuId,
         },
     })
 
