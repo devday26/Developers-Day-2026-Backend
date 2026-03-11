@@ -54,15 +54,16 @@ export async function listCompetitionsWithCategory(_req: Request, res: Response)
         orderBy: [{ name: 'asc' }],
     })
 
-    const categoryMap = getCategoryMap()
-
+    // const categoryMap = getCategoryMap()
     res.json({
         success: true,
         data: competitions.map((c) => ({
             id:          c.id,
             name:        c.name,
-            category:    categoryMap.get(c.name) ?? 'Uncategorized',
+            category:    c.category,
             description: c.description ?? null,
+            earlyBirdFee:   c.earlyBirdFee,
+            earlyBirdLimit: c.earlyBirdLimit,
             fee:         Number(c.fee),
             minTeamSize: c.minTeamSize,
             maxTeamSize: c.maxTeamSize,

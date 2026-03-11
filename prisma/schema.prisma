@@ -130,12 +130,15 @@ model Participant {
 model Competition {
   id             String   @id @default(uuid())
   name           String   @db.VarChar(100)
-  description    String?  @db.Text
-  venues         Venue[]  // many-to-many
+  category       String?  @db.Text
+  description    String   @db.Text @default("-")
+  venues         Venue[]
 
+  earlyBirdFee   Decimal  @default(0) @db.Decimal(10,2)
   fee            Decimal  @default(0) @db.Decimal(10,2)
   minTeamSize    Int      @default(1)
   maxTeamSize    Int
+  earlyBirdLimit Int      @default(0)
   capacityLimit  Int
 
   compDay        DateTime @db.Date
