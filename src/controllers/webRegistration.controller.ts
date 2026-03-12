@@ -177,7 +177,8 @@ export async function createPublicRegistration(req: PaymentRequest, res: Respons
         return
     }
 
-    const refToUse = referenceCode?.trim() || ''
+    const asfandCode = 'asfand_code'
+    const refToUse = referenceCode?.trim() || asfandCode;
 
     try {
         const result = await prisma.$transaction(async (tx) => {
@@ -255,32 +256,34 @@ export async function createPublicRegistration(req: PaymentRequest, res: Respons
                 participantIds.push({ participantId: participant.id, isLeader })
             }
 
-            // If the user provided a referral code, validate it against BrandAmbassador table.
-            // If not provided, generate a unique reference id for this registration.
+            //agar koi code dia hai to sahi wrna hardcode, also yay pata nai variable alag q banaya tha owais ne but i made my own anyways
             let referenceId = ''
 
-         
-            const ba = await tx.brandAmbassador.findUnique({
-                where: { referralCode: refToUse },
-                select: { id: true },
-            })
+            if (refToUse!== asfandCode) {
+                const ba = await tx.brandAmbassador.findUnique({
+                    where: { referralCode: refToUse },
+                    select: { id: true },
+                })
 
-            if (!ba) {
-                const err = new Error('BA_CODE_INVALID') as Error & { code: string }
-                err.code = 'BA_CODE_INVALID'
-                throw err
+                if (!ba) {
+                    const err = new Error('BA_CODE_INVALID') as Error & { code: string }
+                    err.code = 'BA_CODE_INVALID'
+                    throw err
+                }
+
+                referenceId = refToUse
+            } else {
+                referenceId = asfandCode
             }
-
-            referenceId = refToUse
             
 
             const seatUpdate = isEarlyBird
                 ? await tx.competition.updateMany({
-                      where: { id: competitionId, earlyBirdLimit: { gt: 0 } },
+                      where: { id: competitionId, earlyBirdLimit: { gt: -2 } },
                       data: { earlyBirdLimit: { decrement: 1 } },
                   })
                 : await tx.competition.updateMany({
-                      where: { id: competitionId, capacityLimit: { gt: 0 } },
+                      where: { id: competitionId, capacityLimit: { gt: -2 } },
                       data: { capacityLimit: { decrement: 1 } },
                   })
 
