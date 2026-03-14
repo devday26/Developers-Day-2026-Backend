@@ -68,6 +68,8 @@ export async function listCompetitionsWithCategory(_req: Request, res: Response)
             earlyBirdLimit: c.earlyBirdLimit,
             minTeamSize: c.minTeamSize,
             maxTeamSize: c.maxTeamSize,
+            startTime: c.startTime ? c.startTime.toISOString() : null,
+            endTime: c.endTime ? c.endTime.toISOString() : null,
         })),
     })
 }
@@ -91,6 +93,8 @@ export async function getPublicCompetitionById(req: Request, res: Response): Pro
                 earlyBirdLimit: true,
                 minTeamSize: true,
                 maxTeamSize: true,
+                startTime: true,
+                endTime: true,
             },
         })
 
@@ -112,6 +116,8 @@ export async function getPublicCompetitionById(req: Request, res: Response): Pro
                 earlyBirdLimit: competition.earlyBirdLimit,
                 minTeamSize: competition.minTeamSize,
                 maxTeamSize: competition.maxTeamSize,
+                startTime: competition.startTime ? competition.startTime.toISOString() : null,
+                endTime: competition.endTime ? competition.endTime.toISOString() : null,
             },
         })
     } catch (error: any) {
