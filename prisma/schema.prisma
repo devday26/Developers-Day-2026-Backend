@@ -92,7 +92,7 @@ model Team {
   attendance      CompetitionAttendance[]
   competition     Competition             @relation(fields: [competitionId], references: [id])
   members         TeamMember[]
-
+  teamEmails      TeamEmails[]
   @@index([competitionId])
   @@index([paymentStatus])
   @@index([referenceId])
@@ -209,6 +209,18 @@ model Category {
   companies   Company[]
 }
 
+model TeamEmails {
+  id               String   @id @default(uuid())
+  teamId           String
+  status           String?  @default("first_time")
+  welcomeSent      Boolean  @default(false)
+  verificationSent Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  team             Team     @relation(fields: [teamId], references: [id])
+
+  @@index([teamId])
+}
 model Venue {
   id           String        @id @default(uuid())
   name         String        @db.VarChar(100)
